@@ -33,7 +33,7 @@
       body:
         discovered_host:
           name: "{{ name }}"
-          hostgroup_id: 1
+          hostgroup_id: "{{ hostgroup }}"
           mac: "{{ disc_hosts.json.mac }}"
           subnet_id: "{{ disc_hosts.json.subnet_id }}"
           domain_id:  "{{ domain_id }}"
