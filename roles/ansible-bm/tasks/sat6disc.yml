@@ -1,0 +1,40 @@
+---
+  - name: Get discovered hosts
+    uri:
+      url: "https://{{ sat_server }}/api/v2/discovered_hosts"
+      method: GET
+      return_content: yes
+      validate_certs: no
+      user: "{{ user }}"
+      force_basic_auth: yes
+      password: "{{ pw }}"
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+    register: disc_hosts
+
+
+  - name:
+    debug:
+      var: disc_hosts.json.results[0].name
+
+  - name: Provision host
+    uri:
+      url: "https://{{ sat_server }}/api/v2/discovered_hosts/{{ disc_hosts.json.results[0].name }}"
+      method: PUT
+      return_content: yes
+      validate_certs: no
+      user: "{{ user }}"
+      force_basic_auth: yes
+      password: "{{ pw }}"
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+      body:
+        discovered_host:
+          name: "{{ name }}"
+          hostgroup_id: 1
+          mac: "{{ disc_hosts.json.results[0].mac }}"
+          subnet_id: "{{ disc_hosts.json.results[0].subnet_id }}"
+          domain_id:  "{{ domain_id }}"
+    register: prov_hosts
